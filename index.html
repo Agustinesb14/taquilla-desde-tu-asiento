@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- © 2026 Agustín Escribano · necesitounaapp.es · Todos los derechos reservados. Prohibida su copia, reproducción o uso sin permiso por escrito. -->
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desde tu asiento · Francisco de la Hera</title>
+  <meta name="description" content="Prototipo de taquilla: elige zona, mira el campo desde tu asiento y comprueba si estarás a la sombra.">
+  <meta property="og:title" content="Desde tu asiento · Francisco de la Hera">
+  <meta property="og:description" content="Elige zona, mira el campo desde tu asiento y comprueba si estarás a la sombra.">
+  <meta name="robots" content="noindex">
+  <meta name="author" content="Agustín Escribano · necesitounaapp.es">
+  <meta name="copyright" content="© 2026 Agustín Escribano. Todos los derechos reservados.">
+  <link rel="icon" href="img/escudo.webp">
+  <!-- Si alguien mete esta página dentro de la suya (un iframe), se sale y se abre sola en su dirección. -->
+  <script>if (window.top !== window.self) window.top.location.replace(window.self.location.href);</script>
+  <link rel="stylesheet" href="estilos.css">
+  <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }</script>
+</head>
+<body class="pagina-taquilla">
+  <svg width="0" height="0" class="oculto" aria-hidden="true">
+    <defs>
+      <symbol id="icono-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/></g></symbol>
+      <symbol id="icono-sombra" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 11h12v8.5H6z" fill="currentColor" opacity=".45"/></symbol>
+      <symbol id="icono-flecha" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="icono-lluvia" viewBox="0 0 24 24"><path d="M7 15.5a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 17.8 8a3.75 3.75 0 0 1-.3 7.5z" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8.5 18 7.6 20.5M12.5 18l-.9 2.5M16.5 18l-.9 2.5"/></g></symbol>
+      <symbol id="icono-seco" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 11.5c1.8 2.3 2.7 3.8 2.7 5a2.7 2.7 0 0 1-5.4 0c0-1.2.9-2.7 2.7-5z" fill="currentColor" opacity=".35"/><path d="M5 20h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="icono-gota" viewBox="0 0 24 24"><path d="M12 3.5c3.6 4.6 5.4 7.7 5.4 10.1a5.4 5.4 0 0 1-10.8 0c0-2.4 1.8-5.5 5.4-10.1z" fill="currentColor"/></symbol>
+    </defs>
+  </svg>
+
+  <main>
+    <section id="taquilla" class="inmersiva" data-taquilla>
+      <div class="escenario">
+        <figure class="taquilla-vista">
+          <canvas data-vista-3d aria-hidden="true"></canvas>
+          <canvas data-vista aria-label="Vista del campo desde el asiento elegido"></canvas>
+          <figcaption>
+            <span class="pastilla">Arrastra para mirar a los lados</span>
+          </figcaption>
+        </figure>
+
+        <header class="escenario-cabecera">
+          <img src="img/escudo.webp" alt="Escudo del CD Extremadura" width="64" height="64" class="taquilla-escudo">
+          <div>
+            <p class="sello-prototipo"><span>Prototipo</span> Versión de prueba para enseñar la idea. No vende entradas.</p>
+            <h1 class="taquilla-titulo">Elige tu asiento viéndolo antes</h1>
+          </div>
+        </header>
+
+        <dl class="ficha">
+          <div><dt>Zona</dt><dd data-salida="bloque">Tribuna · T3</dd></div>
+          <div><dt>Al centro del campo</dt><dd data-salida="distancia">–</dd></div>
+          <div><dt>Altura de los ojos</dt><dd data-salida="altura">–</dd></div>
+          <div class="ficha-clima"><dt data-salida="clima-etiqueta">Sombra en el bloque</dt><dd data-salida="clima">–</dd></div>
+        </dl>
+
+        <aside class="minimapa" aria-label="Plano del estadio">
+          <svg class="plano" data-plano role="group" aria-label="Plano del estadio. Pulsa un bloque para elegirlo."></svg>
+          <div class="leyenda" data-leyenda data-modo="sol">
+            <span class="leyenda-sol"><svg class="icono icono-sol"><use href="#icono-sol"/></svg> Sol</span>
+            <span class="leyenda-lluvia"><svg class="icono icono-seco"><use href="#icono-seco"/></svg> Seco</span>
+            <span class="leyenda-degradado" aria-hidden="true"></span>
+            <span class="leyenda-sol"><svg class="icono icono-sombra"><use href="#icono-sombra"/></svg> Sombra</span>
+            <span class="leyenda-lluvia"><svg class="icono icono-gota"><use href="#icono-gota"/></svg> Te mojas</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="mandos">
+        <div class="clima" role="group" aria-label="Tiempo el día del partido">
+          <button type="button" class="clima-boton" data-clima="sol" aria-pressed="true"><svg class="icono"><use href="#icono-sol"/></svg> Despejado</button>
+          <button type="button" class="clima-boton" data-clima="lluvia" aria-pressed="false"><svg class="icono"><use href="#icono-lluvia"/></svg> Lluvia</button>
+        </div>
+        <label class="control">
+          <span>Fila <output data-salida="fila">12</output></span>
+          <input type="range" min="1" max="16" value="12" data-fila>
+        </label>
+        <label class="control">
+          <span>Día del partido</span>
+          <input type="date" value="2027-05-09" min="2026-01-01" max="2030-12-31" data-fecha>
+        </label>
+        <label class="control">
+          <span>Hora <output data-salida="hora">18:00</output></span>
+          <input type="range" min="11" max="22.5" step="0.25" value="18" data-hora>
+        </label>
+        <p class="consejo" data-salida="consejo"></p>
+        <p class="compra-falsa"><svg class="icono"><use href="#icono-flecha"/></svg> Aquí iría el botón de compra, conectado con la venta de entradas del club.</p>
+      </div>
+
+      <div class="explicacion">
+        <p>Eliges zona en el plano y ves de verdad lo que vas a ver. Le dices el día y la hora del partido: si hace sol, te dice si vas a estar a la sombra; si llueve, si te vas a mojar.</p>
+        <p class="aviso-prototipo">Prototipo: orientación y contorno reales del estadio (OpenStreetMap); el número de filas de cada grada es una estimación a partir del aforo y de fotos. Con el plano del club se ajusta al asiento exacto. El sol se calcula con su posición real en Almendralejo y la lluvia, con viento de costado (el peor caso).</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p>Diseñado y programado por <strong>Agustín Escribano</strong> · <a href="https://necesitounaapp.es">necesitounaapp.es</a></p>
+    <p class="pie-pequeno">© 2026 Agustín Escribano. Todos los derechos reservados: diseño y código protegidos por la Ley de Propiedad Intelectual; prohibida su copia, reproducción o uso sin permiso por escrito.</p>
+    <p class="pie-pequeno">Prototipo privado para el CD Extremadura. Escudo y nombre propiedad del club. Entorno y orientación del estadio: © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.</p>
+  </footer>
+
+  <script src="js/estadio.js"></script>
+  <script src="js/plano.js"></script>
+  <script src="js/vista.js"></script>
+  <script src="js/lluvia.js"></script>
+  <script src="js/avisos-lluvia.js"></script>
+  <script src="js/taquilla.js"></script>
+  <script type="module" src="js/3d/arranque.js"></script>
+</body>
+</html>

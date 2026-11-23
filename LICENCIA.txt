@@ -1,0 +1,9 @@
+Desde tu asiento · Prototipo de taquilla para el CD Extremadura
+
+© 2026 Agustín Escribano · necesitounaapp.es · Todos los derechos reservados. Prohibida su copia, reproducción o uso sin permiso por escrito.
+
+Este sitio, su diseño y su código son obra de Agustín Escribano (necesitounaapp.es).
+No se concede ninguna licencia de uso, copia, modificación ni distribución.
+Escudo y nombre del CD Extremadura: propiedad del club.
+Entorno del estadio: © colaboradores de OpenStreetMap (ODbL).
+Three.js (carpeta vendor/three): licencia MIT, ver vendor/three/LICENSE.
